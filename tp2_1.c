@@ -14,7 +14,9 @@ struct Nodo {
 
 Tarea cargarTarea();
 Nodo *crearNodo(Tarea tarea);
-void instertarNodo(Nodo **start, Nodo *tarea);
+void insertarNodo(Nodo **start, Nodo *tarea);
+Nodo *buscarNodo(Nodo **start, int id);
+void quitarNodo(Nodo **start, Nodo *nodo);
 
 int tareasId = 1000;
 
@@ -27,9 +29,19 @@ int main() {
     
     while(bandera == 'S' || bandera == 's') {
         nuevaTarea = cargarTarea();
-        instertarNodo(&start, crearNodo(nuevaTarea));
+        insertarNodo(&start, crearNodo(nuevaTarea));
         printf("Desea ingresar otra tarea? S/N \n");
         scanf(" %c", &bandera);
+    }
+
+    Nodo *startRealizadas = NULL;
+    int idRealizada;
+    puts("pasar alguna tarea pendiente a la lista de realizadas ?S/N");
+    scanf(" %c", &bandera);
+    while(bandera == 'S' || bandera == 's') {
+        puts("Ingrese el ID de la tarea realizada.");
+        scanf("%d", &idRealizada);
+        insertarNodo(&startRealizadas, buscarNodo(&start, idRealizada));
     }
 
     /*Nodo *aux = start;
@@ -38,6 +50,10 @@ int main() {
         printf("\nTarea %d: %s\tDuracion:%d", aux->T.TareaID, aux->T.Descripcion, aux->T.Duracion);
     } muestro por pantalla
     */
+
+    /*if(buscarNodo(&start, idRealizada)) 
+    printf("\nTarea %d: %s\tDuracion:%d",buscarNodo(&start, idRealizada)->T.TareaID, buscarNodo(&start, idRealizada)->T.Descripcion, buscarNodo(&start, idRealizada)->T.Duracion);
+    muestro por pantalla buscar nodo*/ 
 
     return 0;
 }
@@ -66,7 +82,24 @@ Nodo *crearNodo(Tarea nuevaTarea) {
     return nuevoNodo;
 }
 
-void instertarNodo(Nodo **start, Nodo *nuevaTarea) {
+void insertarNodo(Nodo **start, Nodo *nuevaTarea) {
     nuevaTarea->Siguiente = *start;
     *start = nuevaTarea;
+}
+
+Nodo *buscarNodo(Nodo **start, int id) {
+    Nodo **aux = start;
+    while(aux && (*aux)->T.TareaID != id){
+        *aux = (*aux)->Siguiente;
+    }
+    return *aux;
+}
+
+void quitarNodo(Nodo **start, Nodo *nodo) {
+    Nodo **aux = start;
+
+    if(*aux) {
+
+    }
+
 }

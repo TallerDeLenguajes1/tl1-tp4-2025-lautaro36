@@ -17,20 +17,49 @@ Tarea cargarTarea();
 Nodo *crearNodo(Tarea nuevaTarea);
 void insertarNodo(Nodo **lista, Nodo *nuevoNodo);
 Nodo *buscarNodo(Nodo **lista, int id);
-Nodo *quitarNodo(Nodo *nodo);
-void mostrarNodos(Nodo *lista);
+void mostrarNodos(Nodo *nodo, char *texto);
+Nodo *quitarNodo(Nodo **lista, int id);
+void eliminarNodo(Nodo *nodo);
+void interfaz(int *opcion);
+void otraIteracion(int *bandera, char *texto);
 
 int tareasId = 1000;
 
 int main() {
-    char bandera='s';
-    Nodo *lista = NULL;
-    while(bandera == 'S' || bandera == 's') {
-        insertarNodo(&lista, crearNodo(cargarTarea() ));
-        printf("Desea ingresar otra tarea? S/N \n");
-        scanf(" %c", &bandera);
+    int bandera=1, opcion;
+    Nodo *lista = NULL, *listaRealizadas = NULL;
+
+    while(bandera) {
+        interfaz(&opcion);
+        switch (opcion) {
+        case 0:
+            int banderaCase0=1;
+            while(banderaCase0) {
+                insertarNodo(&lista, crearNodo(cargarTarea() ));
+                otraIteracion(&banderaCase0, "Desea cargar otra tarea?");
+            }
+            otraIteracion(&bandera, "Desea realizar otra operacion");
+            break;
+        case 1:
+            int id;
+            puts("Ingrese el ID de la tarea que sera transferida");
+            scanf("%d", &id);
+            Nodo *nodoQuitado = quitarNodo(&lista, id);
+            insertarNodo(&listaRealizadas, nodoQuitado);
+            eliminarNodo(nodoQuitado);
+            otraIteracion(&bandera, "Desea realizar otra operacion?");
+            break;
+        case 2:
+        mostrarNodos(lista, "\n ---Lista pendientes: ---");
+        mostrarNodos(listaRealizadas, "\n ---Lista realizadas: ---");
+        otraIteracion(&bandera, "Desea realizar otra operacion?");
+            break;
+        case 3:
+            
+        break;
+        case 4:
+        }
     }
-    mostrarNodos(lista);
 
     /*if(buscarNodo(&start, idRealizada)) 
     printf("\nTarea %d: %s\tDuracion:%d",buscarNodo(&start, idRealizada)->T.TareaID, buscarNodo(&start, idRealizada)->T.Descripcion, buscarNodo(&start, idRealizada)->T.Duracion);
@@ -75,24 +104,68 @@ void insertarNodo(Nodo **lista, Nodo *nuevoNodo) {
 Nodo *buscarNodo(Nodo **lista, int id) {
     Nodo **aux = lista;
     while(aux && (*aux)->T.TareaID != id){
-        *aux = (*aux)->Siguiente;
+        aux = &(*aux)->Siguiente;
     }
     return *aux;
 }
 
-Nodo *quitarNodo(Nodo *nodo) {
-    if(nodo) {
+//Nodo *quitarNodo(Nodo *lista) {
+Nodo *quitarNodo(Nodo **lista, int id) {
+//como hago para hquitar usando la fn buscar
+    Nodo **aux = lista;
+    while(*aux && (*aux)->T.TareaID != id) {
+        aux = &(*aux)->Siguiente;
+    }
+
+    if(*aux) {
+        Nodo *temp = *aux;
+        *aux = (*aux)->Siguiente;
+        temp->Siguiente = NULL;
+        return temp;
+    }
+    /*if(nodo) {
         Nodo *temp = nodo;
         nodo = nodo->Siguiente;
         temp->Siguiente = NULL;
         return temp;
-    }
+    }*/
     return NULL;
 }
 
-void mostrarNodos(Nodo *lista) {
+void mostrarNodos(Nodo *lista, char *texto) {
+    printf("%s", texto);
     while(lista) {
         printf("\nTarea %d: %s\tDuracion:%d", lista->T.TareaID, lista->T.Descripcion, lista->T.Duracion);
         lista = lista->Siguiente;
     }
 }
+
+void eliminarNodo(Nodo *nodo) {
+    free(nodo);
+}
+
+void interfaz(int *opcion) {
+    int valor;
+        printf("-----------Bienvenido-----------\n");
+        printf("Digite una de las siguentes opciones\n");
+        printf("0. Crear tarea\n");
+        printf("1. Cambiar estado de la tarea\n");
+        printf("2. Listar tareas.\n");
+        printf("3. Buscar tarea por ID\n");
+        printf("4. Buscar tarea por palabra clave\n");
+        printf("5. Salir\n");
+
+        scanf("%d", &valor);
+        *opcion = valor;
+} 
+
+void otraIteracion(int *bandera, char *texto) {
+    int opcion;
+    printf("\n%s", texto);
+    printf("\n 0. No.");
+    printf("\n 1. Si.\n");
+    scanf("%d", &opcion);
+
+    *bandera=opcion;
+}
+

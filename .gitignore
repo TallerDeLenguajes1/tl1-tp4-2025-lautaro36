@@ -2,7 +2,7 @@
 # Prerequisites
 *.d
 prueba.c
-
+prueba2.c
 # Object files
 *.o
 *.ko

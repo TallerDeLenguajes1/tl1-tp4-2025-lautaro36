@@ -22,6 +22,7 @@ Nodo *quitarNodo(Nodo **lista, int id);
 void eliminarNodo(Nodo *nodo);
 void interfaz(int *opcion);
 void otraIteracion(int *bandera, char *texto);
+void buscarPorId(Nodo **lista1, Nodo **lista2, int id);
 
 int tareasId = 1000;
 
@@ -55,7 +56,11 @@ int main() {
         otraIteracion(&bandera, "Desea realizar otra operacion?");
             break;
         case 3:
-            
+            int id2;
+            puts("Ingrese el ID de la tarea que desea ver.");
+            scanf("%d", &id2);
+            buscarPorId(&lista, &listaRealizadas, id2);
+            otraIteracion(&bandera, "Desea realizar otra operacion?");
         break;
         case 4:
         }
@@ -103,7 +108,7 @@ void insertarNodo(Nodo **lista, Nodo *nuevoNodo) {
 
 Nodo *buscarNodo(Nodo **lista, int id) {
     Nodo **aux = lista;
-    while(aux && (*aux)->T.TareaID != id){
+    while(*aux && (*aux)->T.TareaID != id){
         aux = &(*aux)->Siguiente;
     }
     return *aux;
@@ -167,5 +172,19 @@ void otraIteracion(int *bandera, char *texto) {
     scanf("%d", &opcion);
 
     *bandera=opcion;
+}
+
+void buscarPorId(Nodo **lista1, Nodo **lista2, int id) {
+    Nodo **aux1 = lista1;
+    Nodo **aux2 = lista2;
+    if(buscarNodo(lista1, id)) {
+        mostrarNodos(buscarNodo(lista1, id), "Tarea Pendiente");
+        //printf("\nTarea %d: %s\tDuracion:%d\t Estado: Pendiente", (*aux1)->T.TareaID, (*aux1)->T.Descripcion, (*aux1)->T.Duracion);
+    } else if(buscarNodo(lista2, id)) {
+        mostrarNodos(buscarNodo(lista2, id), "Tarea Realizada");
+        //printf("\nTarea %d: %s\tDuracion:%d\t Estado: Realizada", (*aux2)->T.TareaID, (*aux2)->T.Descripcion, (*aux2)->T.Duracion);
+    } else {
+        puts("El ID no corresponde a ninguna tarea.");
+    }
 }
 

@@ -24,6 +24,7 @@ void interfaz(int *opcion);
 void otraIteracion(int *bandera, char *texto);
 void buscarPorId(Nodo **lista1, Nodo **lista2, int id);
 void buscarPorPalabra(Nodo **lista1, Nodo **lista2);
+void salir(Nodo **lista1, Nodo **lista2);
 
 int tareasId = 1000;
 
@@ -68,10 +69,12 @@ int main() {
             buscarPorPalabra(&lista, &listaRealizadas);
             otraIteracion(&bandera, "Desea realizar otra operacion?");
             break;
-        case 5:
-            salir()
+        default:
+            bandera=0;
+            break;
         }
     }
+    salir(&lista, &listaRealizadas);
 
     /*if(buscarNodo(&start, idRealizada)) 
     printf("\nTarea %d: %s\tDuracion:%d",buscarNodo(&start, idRealizada)->T.TareaID, buscarNodo(&start, idRealizada)->T.Descripcion, buscarNodo(&start, idRealizada)->T.Duracion);
@@ -153,7 +156,9 @@ void mostrarNodos(Nodo *lista, char *texto) {
 }
 
 void eliminarNodo(Nodo *nodo) {
+    if(nodo) {
     free(nodo);
+    }
 }
 
 void interfaz(int *opcion) {
@@ -215,4 +220,18 @@ void buscarPorPalabra(Nodo **lista1, Nodo **lista2) {
         mostrarNodos(*aux1, "Tarea Pendiente");
     }
     free(clave);
+}
+
+void salir(Nodo **lista1, Nodo **lista2) {
+    while(*lista1) {
+        eliminarNodo(quitarNodo(lista1, (*lista1)->T.TareaID));
+        lista1 = &(*lista1)->Siguiente;
+    }
+
+    while(*lista2) {
+        eliminarNodo(quitarNodo(lista2, (*lista2)->T.TareaID));
+        lista2 = &(*lista2)->Siguiente;
+    }
+
+    puts("liberado con exito");
 }

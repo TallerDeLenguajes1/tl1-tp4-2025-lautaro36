@@ -23,6 +23,7 @@ void eliminarNodo(Nodo *nodo);
 void interfaz(int *opcion);
 void otraIteracion(int *bandera, char *texto);
 void buscarPorId(Nodo **lista1, Nodo **lista2, int id);
+void buscarPorPalabra(Nodo **lista1, Nodo **lista2);
 
 int tareasId = 1000;
 
@@ -63,6 +64,12 @@ int main() {
             otraIteracion(&bandera, "Desea realizar otra operacion?");
         break;
         case 4:
+            printf("Ingrese la descripcion de la tarea que desea ver:");
+            buscarPorPalabra(&lista, &listaRealizadas);
+            otraIteracion(&bandera, "Desea realizar otra operacion?");
+            break;
+        case 5:
+            salir()
         }
     }
 
@@ -175,8 +182,6 @@ void otraIteracion(int *bandera, char *texto) {
 }
 
 void buscarPorId(Nodo **lista1, Nodo **lista2, int id) {
-    Nodo **aux1 = lista1;
-    Nodo **aux2 = lista2;
     if(buscarNodo(lista1, id)) {
         mostrarNodos(buscarNodo(lista1, id), "Tarea Pendiente");
         //printf("\nTarea %d: %s\tDuracion:%d\t Estado: Pendiente", (*aux1)->T.TareaID, (*aux1)->T.Descripcion, (*aux1)->T.Duracion);
@@ -188,3 +193,26 @@ void buscarPorId(Nodo **lista1, Nodo **lista2, int id) {
     }
 }
 
+void buscarPorPalabra(Nodo **lista1, Nodo **lista2) {
+    char *clave = (char *)malloc(sizeof(char) * 100);
+    scanf("%s", clave);
+    Nodo **aux1 = lista1;
+    Nodo **aux2 = lista2;
+    while(*aux1 && strcmp((*aux1)->T.Descripcion, clave)) {
+        aux1 = &(*aux1)->Siguiente; 
+    }
+
+    if(!aux1) {
+        while(*aux2 && strcmp((*aux2)->T.Descripcion, clave)) {
+            aux2 = &(*aux2)->Siguiente;
+        }
+        if(aux2) {
+            mostrarNodos(*aux2, "Tarea Realizada");
+        } else {
+            puts("La palabra clave no coincide con ninguna tarea cargada.");
+        }
+    } else {
+        mostrarNodos(*aux1, "Tarea Pendiente");
+    }
+    free(clave);
+}
